@@ -3,8 +3,8 @@ import bodyWrapper from "../decorators/bodyWrapper.js";
 import HttpError from "../helpers/HTTPError.js";
 
 const getAll = async (req, res) => {
-  const result = await listContacts();
-  return res.json(result);
+  const result = await Contact.find({}, "-createdAt -updatedAt");
+  return res.status(200).json(result);
 };
 
 const getById = async (req, res) => {
