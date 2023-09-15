@@ -29,7 +29,11 @@ const deleteById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  const result = await addContact(req.body);
+  const { error } = schemas.addContact.validate(req.body);
+  if (error) {
+    throw new Error(400, error.message);
+  }
+  const result = await Contact.create(req.body);
   res.status(201).json(result);
 };
 
