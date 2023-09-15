@@ -18,7 +18,7 @@ const getById = async (req, res) => {
 
 const deleteById = async (req, res) => {
   const { id } = req.params;
-  const result = await removeContactById(id);
+  const result = await Contact.findByIdAndRemove(id);
   if (!result) {
     throw HttpError(404, `Contact with id=${id} not found`);
   }
