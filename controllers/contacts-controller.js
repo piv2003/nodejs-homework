@@ -1,10 +1,4 @@
-import {
-  listContacts,
-  getContactById,
-  removeContactById,
-  addContact,
-  updateContact,
-} from "../models/contacts.js";
+import { Contact, schemas } from "../models/contacts.js";
 import bodyWrapper from "../decorators/bodyWrapper.js";
 import HttpError from "../helpers/HTTPError.js";
 
