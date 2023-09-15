@@ -53,10 +53,26 @@ const updateById = async (req, res) => {
   res.status(200).json(result);
 };
 
+const updateFavorite = async (req, res) => {
+  const { error } = schemas.updateFavoriteSchema.validate(req.body);
+  if (error) {
+    throw new Error(400, "The favorite field is missing");
+  }
+  const { id } = req.params;
+  const result = await Contact.findOneAndUpdate({ _id: id }, req.body, {
+    new: true,
+  });
+
+  if (!result) {
+    throw HttpError(404, `Movie with id=${id} not found`);
+  }
+};
+
 export default {
   getAll: bodyWrapper(getAll),
   getById: bodyWrapper(getById),
   add: bodyWrapper(add),
   updateById: bodyWrapper(updateById),
   deleteById: bodyWrapper(deleteById),
+  updateFavorite: bodyWrapper(updateFavorite),
 };
