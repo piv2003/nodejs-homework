@@ -1,56 +1,12 @@
-import { Schema, model } from "mongoose";
+import express from "express";
+import contactSchema from "../../schemas/contacts-schemas.js";
+import contactsController from "../../controllers/contacts-controller.js";
+import isEmptyBody from "../../middlewares/isEmptyBody.js";
+import validateBody from "../../decorators/validateBody.js";
+import isValidId from "../../middlewares/isValidId.js";
 
-import handleMongooseError from "../helpers/handleMongooseError.js";
-import {
-  emailDateRegexp,
-  nameDateRegexp,
-  phoneDateRegexp,
-} from "../constants/contacts-constants.js";
+const contactAddValidate = validateBody(contactSchema.contactAddSchema);
+const contactUpdateFavorite = validateBody(contactSchema.contactUpdateFavorite);
+const contactsRouter = express.Router();
 
-import { handleSaveError, runValidateAtUpdate } from "./hooks.js";
-
-const contactSchema = new Schema(
-  {
-    name: {
-      type: String,
-      match: nameDateRegexp,
-      required: [true, "Set name for contact"],
-    },
-    email: {
-      type: String,
-      match: emailDateRegexp,
-      required: [true, "Set email for contact"],
-    },
-    phone: {
-      type: String,
-      match: phoneDateRegexp,
-      required: [true, "Set phone for contact"],
-    },
-    favorite: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  { versionKey: false, timestamp: true }
-);
-
-contactSchema.pre("findOneAndUpdate", runValidateAtUpdate);
-
-contactSchema.post("save", handleMongooseError);
-contactSchema.post("findOneAndUpdate", handleSaveError);
-
-const updateFavoriteSchema = new Schema({
-  favorite: {
-    type: Boolean,
-    required: true,
-  },
-});
-
-const schemas = {
-  contactSchema,
-  updateFavoriteSchema,
-};
-
-const Contact = model("contact", contactSchema);
-
-export { Contact, schemas };
+export default contactsRouter;
