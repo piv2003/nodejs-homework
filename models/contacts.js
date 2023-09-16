@@ -34,6 +34,18 @@ const contactSchema = new Schema(
   { versionKey: false, timestamp: true }
 );
 
+contactSchema.pre("findOneAndUpdate", runValidateAtUpdate);
+
+contactSchema.post("save", handleMongooseError);
+contactSchema.post("findOneAndUpdate", handleSaveError);
+
+const updateFavoriteSchema = new Schema({
+  favorite: {
+    type: Boolean,
+    required: true,
+  },
+});
+
 const Contact = model("contact", contactSchema);
 
 export { Contact, schemas };
