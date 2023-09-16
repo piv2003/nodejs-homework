@@ -46,6 +46,11 @@ const updateFavoriteSchema = new Schema({
   },
 });
 
+const schemas = {
+  contactSchema,
+  updateFavoriteSchema,
+};
+
 const Contact = model("contact", contactSchema);
 
 export { Contact, schemas };
