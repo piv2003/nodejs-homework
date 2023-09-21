@@ -11,7 +11,17 @@ const register = async (req, res, next) => {};
 
 const login = async (req, res, next) => {};
 
-const current = (req, res) => {};
+const current = (req, res) => {
+  const { email, subscription } = req.user;
+  res.json({
+    status: "success",
+    code: HttpCode.OK,
+    date: {
+      email,
+      subscription,
+    },
+  });
+};
 
 const logout = async (req, res, next) => {
   const { _id } = req.user;
