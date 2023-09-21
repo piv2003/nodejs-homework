@@ -9,7 +9,27 @@ const { JWT_SECRET_KEY } = process.env;
 
 const register = async (req, res, next) => {};
 
-const login = async (req, res, next) => {};
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email, password });
+  const payload = { id: user._id };
+  const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "23h" });
+  const result = await User.findOneAndUpdate(payload, { token });
+  res.json({
+    status: "success",
+    code: HttpCode.OK,
+    date: {
+      token,
+      user: { email: user.email, subscription: user.subscription },
+    },
+  });
+  if (!result) {
+    throw new HttpError(
+      HttpCode.BAD_REQUEST,
+      `Error from Joi or other validation library`
+    );
+  }
+};
 
 const current = (req, res) => {
   const { email, subscription } = req.user;
