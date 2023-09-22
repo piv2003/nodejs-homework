@@ -7,6 +7,9 @@ import bodyWrapper from "../decorators/bodyWrapper.js";
 
 const { JWT_SECRET_KEY } = process.env;
 
-export const checkJwt = async (req, res, next) => {};
+export const checkJwt = async (req, res, next) => {
+  const { authorization = "" } = req.headers;
+  const [bearer, token] = authorization?.split(" ");
+};
 
 export default bodyWrapper(checkJwt);
