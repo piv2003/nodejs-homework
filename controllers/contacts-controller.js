@@ -64,14 +64,14 @@ const updateFavorite = async (req, res) => {
   if (error) {
     throw new Error(HttpCode.BAD_REQUEST, "The favorite field is missing");
   }
+  const { id } = req.params;
+  const result = await Contact.findOneAndUpdate({ _id: id }, req.body, {
+    new: true,
+  });
+  if (!result) {
+    throw HttpError(HttpCode.NOT_FOUND, `Movie with id=${id} not found`);
+  }
 };
-const { id } = req.params;
-const result = await Contact.findOneAndUpdate({ _id: id }, req.body, {
-  new: true,
-});
-if (!result) {
-  throw HttpError(HttpCode.NOT_FOUND, `Movie with id=${id} not found`);
-}
 
 export default {
   getAll: bodyWrapper(getAll),
