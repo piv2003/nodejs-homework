@@ -1,17 +1,22 @@
-import { Contact, schemas } from "../models/contact.js";
+import Contact from "../models/contact.js";
+import { HttpCode } from "../constants/user-constants.js";
 import bodyWrapper from "../decorators/bodyWrapper.js";
 import HttpError from "../helpers/HTTPError.js";
 
 const getAll = async (req, res) => {
-  const result = await Contact.find({}, "-createdAt -updatedAt");
-  return res.status(200).json(result);
+  const { _id: owner } = req.user;
+  const result = await Contact.find(
+    { owner },
+    "-createdAt -updatedAt"
+  ).populate("owner", "name email");
+  res.json(result);
 };
 
 const getById = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findById(id);
   if (!result) {
-    throw HttpError(404, `Contact with id=${id} not found`);
+    throw HttpError(HttpCode.NOT_FOUND, `Contact with id=${id} not found`);
   }
   res.json(result);
 };
@@ -20,7 +25,7 @@ const deleteById = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findByIdAndRemove(id);
   if (!result) {
-    throw HttpError(404, `Contact with id=${id} not found`);
+    throw HttpError(HttpCode.NOT_FOUND, `Contact with id=${id} not found`);
   }
 
   res.json({
