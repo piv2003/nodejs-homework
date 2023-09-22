@@ -1,4 +1,4 @@
-import { Contact, schemas } from "../models/contacts.js";
+import { Contact, schemas } from "../models/contact.js";
 import bodyWrapper from "../decorators/bodyWrapper.js";
 import HttpError from "../helpers/HTTPError.js";
 
