@@ -44,9 +44,9 @@ const add = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  const { error } = schemas.addContact.validate(req.body);
+  const { error } = Contact.contactSchema.validate(req.body);
   if (error) {
-    throw new Error(400, error.message);
+    throw new Error(HttpCode.BAD_REQUEST, error.message);
   }
   const { id } = req.params;
   const result = await Contact.findOneAndUpdate({ _id: id }, req.body, {
@@ -54,15 +54,16 @@ const updateById = async (req, res) => {
   });
 
   if (!result) {
-    throw HttpError(404, `Movie with id=${id} not found`);
+    throw HttpError(HttpCode.NOT_FOUND, `Movie with id=${id} not found`);
   }
-  res.status(200).json(result);
+  res.json(result);
 };
 
 const updateFavorite = async (req, res) => {
-  const { error } = schemas.updateFavoriteSchema.validate(req.body);
+    const { error } = Contact.updateFavoriteSchema.validate(req.body);
   if (error) {
-    throw new Error(400, "Missing field favorite");
+    throw new Error(HttpCode.BAD_REQUEST, "The favorite field is missing");
+  }
   }
   const { id } = req.params;
   const result = await Contact.findOneAndUpdate({ _id: id }, req.body, {
