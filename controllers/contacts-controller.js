@@ -34,12 +34,13 @@ const deleteById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  const { error } = schemas.addContact.validate(req.body);
+  const { _id: owner } = req.user;
+  const { error } = Contact.contactSchema.validate(req.body);
   if (error) {
-    throw new Error(400, error.message);
+    throw new Error(HttpCode.BAD_REQUEST, error.message);
   }
-  const result = await Contact.create(req.body);
-  res.status(201).json(result);
+  const result = await Contact.create(...req.body, owner);
+  res.status(HttpCode.CREATED).json(result);
 };
 
 const updateById = async (req, res) => {
