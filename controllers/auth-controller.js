@@ -7,7 +7,32 @@ import HttpError from "../helpers/HTTPError.js";
 
 const { JWT_SECRET_KEY } = process.env;
 
-const register = async (req, res, next) => {};
+const register = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  const { error } = User.userSchema.validate(req.body);
+  if (error) {
+    throw new Error(
+      HttpCode.BAD_REQUEST,
+      `Error from Joi or other validation library`
+    );
+  }
+  if (user) {
+    throw new Error(HttpCode.CONFLICT, `Email ${email} is already in use`);
+  }
+  const hashPassword = await bcrypt.hash(password, 10);
+  const newUser = await User.create({ ...req.body, password: hashPassword });
+  res.status(HttpCode.CREATED).json({
+    status: "success",
+    code: HttpCode.CREATED,
+    data: {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
+  });
+};
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
