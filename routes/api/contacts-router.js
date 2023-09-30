@@ -1,7 +1,12 @@
 import express from "express";
 import contactSchema from "../../schemas/contacts-schemas.js";
 import contactsController from "../../controllers/contacts-controller.js";
-import { isValidId, isEmptyBody, checkJwt } from "../../middlewares/index.js";
+import {
+  isValidId,
+  isEmptyBody,
+  checkJwt,
+  upload,
+} from "../../middlewares/index.js";
 import validateBody from "../../decorators/validateBody.js";
 
 const contactAddValidate = validateBody(contactSchema.contactAddSchema);
