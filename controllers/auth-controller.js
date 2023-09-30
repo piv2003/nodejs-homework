@@ -1,9 +1,11 @@
-import User from "../models/user.js";
+import { User } from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { HttpCode } from "../constants/user-constants.js";
-import bodyWrapper from "../decorators/bodyWrapper.js";
-import HttpError from "../helpers/HTTPError.js";
+import path, { dirname } from "path";
+import fs from "fs/promises";
+import gravatar from "gravatar";
+import Jimp from "jimp";
+import { fileURLToPath } from "url";
 
 const { JWT_SECRET_KEY } = process.env;
 
