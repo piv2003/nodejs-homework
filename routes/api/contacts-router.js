@@ -18,11 +18,18 @@ contactsRouter.get("/", contactsController.getAll);
 contactsRouter.get("/:id", isValidId, contactsController.getById);
 
 contactsRouter.post(
-  "/",
+  "/register",
+  upload.single("avatar"),
   isValidId,
   isEmptyBody,
   contactAddValidate,
-  contactsController.add
+  contactsController.add,
+  (req, res) => {
+    const { error } = contactSchema.contactAddSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+  }
 );
 
 contactsRouter.put(
