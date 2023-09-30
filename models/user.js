@@ -62,4 +62,4 @@ const User = model("user", {
   updateSubscriptionSchema,
 });
 
-export default User;
+export { User };
