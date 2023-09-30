@@ -41,6 +41,8 @@ const register = async (req, res, next) => {
       email: newUser.email,
       subscription: newUser.subscription,
     },
+    password: hashPassword,
+    avatarURL,
   });
 };
 
