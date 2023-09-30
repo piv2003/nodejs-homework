@@ -8,6 +8,9 @@ import Jimp from "jimp";
 import { fileURLToPath } from "url";
 
 const { JWT_SECRET_KEY } = process.env;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res, next) => {
   const { email, password } = req.body;
