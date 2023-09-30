@@ -68,6 +68,16 @@ const login = async (req, res, next) => {
   }
 };
 
+const getAll = async (req, res) => {
+  const { _id: user } = req.body;
+  const result = await User.find({ user }, "-createdAt -updatedAt").populate(
+    "user",
+    "name email"
+  );
+  res.json(result);
+  console.log(result);
+};
+
 const current = (req, res) => {
   const { email, subscription } = req.user;
   res.json({
