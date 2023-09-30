@@ -32,6 +32,26 @@ const userSchema = new Schema(
 
 userSchema.pre("findOneAndUpdate", runValidateAtUpdate);
 userSchema.post("save", handleSaveError);
+const registerSchema = Joi.object({
+  subscription: Joi.string().valid(...subOpts),
+  email: Joi.string().pattern(emailDateRegexp).required(),
+  password: Joi.string().min(6).required(),
+});
+
+const emailSchema = Joi.object({
+  email: Joi.string().pattern(emailDateRegexp).required(),
+});
+
+const loginSchema = Joi.object({
+  email: Joi.string().pattern(emailDateRegexp).required(),
+  password: Joi.string().min(6).required(),
+});
+
+const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.string()
+    .valid(...subOpts)
+    .required(),
+});
 userSchema.post("findOneAndUpdate", handleSaveError);
 
 const User = model("user", userSchema);
