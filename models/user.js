@@ -1,6 +1,10 @@
 import { Schema, model } from "mongoose";
 import { handleSaveError, runValidateAtUpdate } from "./hooks.js";
 import { emailRegexp } from "../constants/user-constants.js";
+import Joi from "joi";
+import { emailDateRegexp } from "../constants/contacts-constants.js";
+
+const subOpts = ["starter", "pro", "business"];
 
 const userSchema = new Schema(
   {
@@ -21,6 +25,7 @@ const userSchema = new Schema(
       default: "starter",
     },
     token: String,
+    avatarURL: String,
   },
   { versionKey: false, timestamps: true }
 );
