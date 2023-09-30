@@ -26,7 +26,12 @@ const register = async (req, res, next) => {
     throw new Error(HttpCode.CONFLICT, `Email ${email} is already in use`);
   }
   const hashPassword = await bcrypt.hash(password, 10);
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  const avatarURL = gravatar.url(email);
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
   res.status(HttpCode.CREATED).json({
     status: "success",
     code: HttpCode.CREATED,
