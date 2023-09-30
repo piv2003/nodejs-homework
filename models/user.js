@@ -54,6 +54,12 @@ const updateSubscriptionSchema = Joi.object({
 });
 userSchema.post("findOneAndUpdate", handleSaveError);
 
-const User = model("user", userSchema);
+const User = model("user", {
+  userSchema,
+  registerSchema,
+  emailSchema,
+  loginSchema,
+  updateSubscriptionSchema,
+});
 
 export default User;
