@@ -120,6 +120,22 @@ const updateSubscription = async (res, req) => {
   res.json({ email, subscription });
 };
 
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: tmpUpload, originalname } = req.file;
+  const filename = `${_id}_${originalname}`;
+  const uploadPath = path.join(avatarsDir, filename);
+
+  await Jimp.read(tmpUpload).then((avatar) => {
+    return avatar.resize(250, 250).write(tmpUpload);
+  });
+  await fs.rename(tmpUpload, uploadPath);
+  const avatarURL = await moveAvatarToPublic(_id, tmpUpload);
+  await User.findByIdAndUpdate(_id, { avatarURL });
+
+  res.json({ avatarURL });
+};
+
 export default {
   register: bodyWrapper(register),
   login: bodyWrapper(login),
