@@ -168,6 +168,22 @@ const getById = async (req, res) => {
   res.json(result);
 };
 
+const removeById = async (id) => {
+  try {
+    const removedUser = await User.findByIdAndRemove(id);
+
+    if (!removedUser) {
+      throw new Error(`User with id=${id} not found.`);
+    }
+
+    console.log(`User with id=${id} has been removed from the database.`);
+    return removedUser;
+  } catch (error) {
+    console.error("Error removing user by id:", error.message);
+    throw new Error("Failed to remove user from the database.");
+  }
+};
+
 export default {
   register: bodyWrapper(register),
   login: bodyWrapper(login),
