@@ -99,6 +99,27 @@ const logout = async (req, res, next) => {
   res.status(HttpCode.NO_CONTENT).json({ message: "SignOut success" });
 };
 
+const updateSubscription = async (res, req) => {
+  const { error } = User.updateSubscriptionSchema.validate(req.body);
+  if (error) {
+    throw new Error(
+      HttpCode.BAD_REQUEST,
+      "Missing subscription field or set incorrectly"
+    );
+  }
+  const { _id, email } = req.user;
+  const { subscription } = req.body;
+  const result = await User.findOneAndUpdate(
+    _id,
+    { subscription },
+    { new: true }
+  );
+  if (!result) {
+    throw Error(HttpCode.NOT_FOUND, `Contact with id=${_id} not found`);
+  }
+  res.json({ email, subscription });
+};
+
 export default {
   register: bodyWrapper(register),
   login: bodyWrapper(login),
