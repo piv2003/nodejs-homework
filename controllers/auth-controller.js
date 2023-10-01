@@ -159,6 +159,15 @@ const moveAvatarToPublic = async (id, tmpAvatarPath) => {
   }
 };
 
+const getById = async (req, res) => {
+  const { id } = req.params;
+  const result = await User.findById(id);
+  if (!result) {
+    throw HttpError(404, `Contact with id=${id} not found`);
+  }
+  res.json(result);
+};
+
 export default {
   register: bodyWrapper(register),
   login: bodyWrapper(login),
