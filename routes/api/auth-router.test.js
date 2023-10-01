@@ -1,53 +1,3 @@
-/*
-Register controller testing examples.
-
-Given email in format email and password is 6 numbers long.
-Return json data format with token, status: "success",
-    code: HttpCode.CREATED, user data object containing 
-    2 fields: email and subscription *in the String data format.
-If user with the same email is already present throw error with `Email ${email} is already in use` message
-If given invalid data throw `Error from Joi or other validation library` error.
-
-
-
-Test data:
-1. {"Bogdan", "bogdan@gmail.com","1234567"}; => {
-      id: newUser.id,
-      email: "bogdan@gmail.com",
-      subscription: "starter",
-    }
-2. { bogdan@gmail.com, 7894561, pro } => {
-      id: newUser.id,
-      email: "bogdan@gmail.com",
-      subscription: "pro",
-    }
-3. { bogdan@gmail, 1234567 } => throw new Error(
-      HttpCode.BAD_REQUEST,
-      `Error from Joi or other validation library`
-    );
-4. { bogdangmail.com, 1234567 } => throw new Error(
-      HttpCode.BAD_REQUEST,
-      `Error from Joi or other validation library`
-    );
-5. { bogdangmail.com, 1 } => throw new Error(
-      HttpCode.BAD_REQUEST,
-      `Error from Joi or other validation library`
-    );
-6. { 124589@gmail.com, 1234567 } => throw new Error(
-      HttpCode.BAD_REQUEST,
-      `Error from Joi or other validation library`
-    );
-7. { , 1234567 } => throw new Error(
-      HttpCode.BAD_REQUEST,
-      `Error from Joi or other validation library`
-    );
-8. { ,  } => throw new Error(
-      HttpCode.BAD_REQUEST,
-      `Error from Joi or other validation library`
-    );
-9. Second time register the same user { Bogdan, bogdan@gmail.com, 1234567 } => {
-    throw new Error(HttpCode.CONFLICT, `Email ${email} is already in use`);
-*/
 import mongoose from "mongoose";
 import "dotenv/config";
 import request from "supertest";
@@ -72,11 +22,6 @@ describe("test register", () => {
     await User.deleteMany({});
   });
 
-  // Test_case1: {"Bogdan", "bogdan@gmail.com","1234567"}; => {
-  //     id: newUser.id,
-  //     name: Bogdan,
-  //     email: "bogdan@gmail.com"
-  // }
   test("test register with correct data", async () => {
     const requestData = {
       name: "Bogdan",
@@ -99,11 +44,6 @@ describe("test register", () => {
     expect(user?.name).toBe(requestData.name);
   });
 
-  // Test_case2: { bogdan@gmail.com, 7894561, pro } => {
-  //     id: newUser.id,
-  //     email: "bogdan@gmail.com",
-  //     subscription: "pro",
-  // }
   test("test register with correct data and subscription:'pro'} ", async () => {
     const requestData = {
       name: "Bogdan",
@@ -128,10 +68,6 @@ describe("test register", () => {
     expect(user?.subscription).toBe(requestData.subscription);
   });
 
-  // Test_case3: { bogdan@gmail, 1234567 } => throw new Error(
-  //     HttpCode.BAD_REQUEST,
-  //     `Error from Joi or other validation library`;
-  // );
   test("test register with bad email format", async () => {
     const requestData = {
       email: "bogdan@gmail",
@@ -150,10 +86,6 @@ describe("test register", () => {
     expect(userCount).toBe(0);
   });
 
-  // Test_case4: { , 1234567 } => throw new Error(
-  //     HttpCode.BAD_REQUEST,
-  //     `Error from Joi or other validation library`
-  // );
   test("test register missing email input", async () => {
     const requestData = {
       password: "1234567",
@@ -170,10 +102,7 @@ describe("test register", () => {
     const userCount = await User.countDocuments();
     expect(userCount).toBe(0);
   });
-  // Test_case5: { bogdan@gmail.com, } => throw new Error(
-  //     HttpCode.BAD_REQUEST,
-  //     `Error from Joi or other validation library`
-  // );
+
   test("test register missing password input", async () => {
     const requestData = {
       email: "bogdan@gmail.com",
@@ -190,7 +119,7 @@ describe("test register", () => {
     const userCount = await User.countDocuments();
     expect(userCount).toBe(0);
   });
-  // Test_case6: Second time register the same user { name: "Bogdan", email: "bogdan@gmail.com", password: "1234567" }
+
   test("test register existing user", async () => {
     const requestData = {
       name: "Bogdan",
