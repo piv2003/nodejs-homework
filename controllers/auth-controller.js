@@ -199,5 +199,12 @@ export default {
   register: bodyWrapper(register),
   login: bodyWrapper(login),
   logout: bodyWrapper(logout),
+  getById: bodyWrapper(getById),
+  getAll: bodyWrapper(getAll),
   current: bodyWrapper(current),
+  updateSubscription: bodyWrapper(updateSubscription),
+  updateAvatar: bodyWrapper(updateAvatar),
+  moveAvatarToPublic: bodyWrapper(moveAvatarToPublic),
+  removeById: bodyWrapper(removeById),
+  removeAll: bodyWrapper(removeAll),
 };
