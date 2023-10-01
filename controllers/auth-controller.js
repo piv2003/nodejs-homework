@@ -184,6 +184,17 @@ const removeById = async (id) => {
   }
 };
 
+const removeAll = async () => {
+  try {
+    // Use the User model to delete all documents from the users collection
+    await User.deleteMany({});
+    console.log("All users have been removed from the database.");
+  } catch (error) {
+    console.error("Error removing all users:", error.message);
+    throw new Error("Failed to remove all users from the database.");
+  }
+};
+
 export default {
   register: bodyWrapper(register),
   login: bodyWrapper(login),
