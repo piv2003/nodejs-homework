@@ -136,6 +136,29 @@ const updateAvatar = async (req, res) => {
   res.json({ avatarURL });
 };
 
+const moveAvatarToPublic = async (id, tmpAvatarPath) => {
+  try {
+    const tmp = path.join(__dirname, "../tmp");
+    await fs.mkdir(tmp, { recursive: true });
+
+    const avatar = await Jimp.read(tmpAvatarPath);
+    avatar.resize(250, 250);
+
+    const uniqueFilename = `${id}_${avatar.filename}`;
+    const avatarPath = path.join(avatarsDir, uniqueFilename);
+
+    await avatar.writeAsync(avatarPath);
+
+    const avatarURL = `/avatars/${uniqueFilename}`;
+    await User.findByIdAndUpdate(id, { avatarURL });
+
+    await fs.unlink(tmpAvatarPath);
+    return avatarURL;
+  } catch (error) {
+    throw new Error("Failed moveAvatarToPublic");
+  }
+};
+
 export default {
   register: bodyWrapper(register),
   login: bodyWrapper(login),
