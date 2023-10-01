@@ -36,14 +36,6 @@ const deleteById = async (req, res) => {
 const add = async (req, res) => {
   const { _id: owner } = req.user;
   console.log(req.user, owner);
-  // const (path: oldPath, originalName)
-  // const { error } = Contact.contactSchema.validate(req.body);
-  // if (error) {
-  //   throw new Error(HttpCode.BAD_REQUEST, error.message);
-  // }
-  // await fs.rename();
-  // const result = await Contact.create(...req.body, owner);
-  // res.status(HttpCode.CREATED).json(result);
 };
 
 const updateById = async (req, res) => {
