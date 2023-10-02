@@ -35,12 +35,7 @@ const deleteById = async (req, res) => {
 
 const add = async (req, res) => {
   const { _id: owner } = req.user;
-  const { error } = Contact.contactSchema.validate(req.body);
-  if (error) {
-    throw new Error(HttpCode.BAD_REQUEST, error.message);
-  }
-  const result = await Contact.create(...req.body, owner);
-  res.status(HttpCode.CREATED).json(result);
+  console.log(req.user, owner);
 };
 
 const updateById = async (req, res) => {
