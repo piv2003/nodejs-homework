@@ -7,6 +7,7 @@ import { checkJwt, upload } from "../../middlewares/index.js";
 const authRouter = express.Router();
 const userSignUpValidate = validateBody(userSchemas.userSignUpSchema);
 const userSignInValidate = validateBody(userSchemas.userSignInSchema);
+const userEmailValidate = validateBody(userSchemas.userEmailSchema);
 
 authRouter.post("/register", userSignUpValidate, authController.register);
 authRouter.post("/login", userSignInValidate, authController.login);
