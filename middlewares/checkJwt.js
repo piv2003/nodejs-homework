@@ -1,4 +1,4 @@
-import { User } from "../models/user.js";
+import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
 import HttpError from "../helpers/HTTPError.js";
@@ -23,7 +23,7 @@ export const checkJwt = async (req, res, next) => {
     req.token = token;
     next();
   } catch (error) {
-    throw new HttpError(HttpCode.UNAUTHORIZED);
+    throw new HttpError(401, error.message);
   }
 };
 
