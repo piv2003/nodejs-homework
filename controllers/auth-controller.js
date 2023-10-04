@@ -1,7 +1,7 @@
-import { User } from "../models/user.js";
+import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import path, { dirname } from "path";
+import path from "path";
 import fs from "fs/promises";
 import gravatar from "gravatar";
 import Jimp from "jimp";
