@@ -1,14 +1,13 @@
-import User from "../models/user.js";
+import User from "../repository/users.repository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import path from "path";
-import fs from "fs/promises";
-import gravatar from "gravatar";
-import Jimp from "jimp";
-import { fileURLToPath } from "url";
+import fs, { mkdir } from "fs/promises";
+import UploadService from "../services/file-upload.js";
+import "dotenv/config";
 import { HttpCode } from "../constants/user-constants.js";
 import bodyWrapper from "../decorators/bodyWrapper.js";
-import HttpError from "../helpers/HTTPError.js";
+import { HttpError, sendEmail } from "../helpers/index.js";
 
 const { JWT_SECRET_KEY } = process.env;
 const __filename = fileURLToPath(import.meta.url);
