@@ -22,28 +22,12 @@ const registrationController = async (req, res, next) => {
     );
   }
   if (user) {
-    throw new Error(HttpCode.CONFLICT, `Email ${email} is already in use`);
+    return res.status(HttpCode.CONFLICT).json({
+      status: "error",
+      code: HttpCode.CONFLICT,
+      message: "Email in use",
+    });
   }
-  const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email);
-  const newUser = await User.create({
-    ...req.body,
-    password: hashPassword,
-    avatarURL,
-  });
-  res.status(HttpCode.CREATED).json({
-    status: "success",
-    code: HttpCode.CREATED,
-    data: {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      subscription: newUser.subscription,
-    },
-    password: hashPassword,
-    avatarURL,
-  });
-};
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
