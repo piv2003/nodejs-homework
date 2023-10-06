@@ -9,17 +9,14 @@ import { HttpCode } from "../constants/user-constants.js";
 import bodyWrapper from "../decorators/bodyWrapper.js";
 import { HttpError, sendEmail } from "../helpers/index.js";
 
-const { JWT_SECRET_KEY } = process.env;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+const { JWT_SECRET_KEY, BASE_URL } = process.env;
 
-const register = async (req, res, next) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+const registrationController = async (req, res, next) => {
+  const { name, email, password, gender } = req.body;
+  const user = await User.findByEmail(email);
   const { error } = User.userSchema.validate(req.body);
   if (error) {
-    throw new Error(
+    throw HttpError(
       HttpCode.BAD_REQUEST,
       `Error from Joi or other validation library`
     );
