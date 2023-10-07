@@ -19,6 +19,11 @@ class UploadFileAvatar {
       )
       .writeAsync(pathFile);
   }
+  async save(file, idUser) {
+    await this.transformAvatar(file.path);
+    await fs.rename(file.path, path.join(this.destination, file.filename));
+    return path.normalize(path.join(idUser, file.filename));
+  }
 }
 
 export default UploadFileAvatar;
