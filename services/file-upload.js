@@ -8,7 +8,9 @@ class UploadFileAvatar {
   }
   async transformAvatar(pathFile) {
     const pic = Jimp.read(pathFile);
-    await pic
+    await (
+      await pic
+    )
       .autocrop()
       .cover(
         250,
