@@ -8,4 +8,14 @@ const findByEmail = async (email) => {
   return await User.findOne({ email });
 };
 
-export default { User };
+export default {
+  User,
+  findById,
+  findByEmail,
+  create,
+  updateToken,
+  updateSubscription,
+  updateAvatar,
+  updateTokenVerify,
+  findUserByVerifyToken,
+};
