@@ -1,5 +1,8 @@
 const Contact = require("../model/contactModel");
 
+const listContacts = async (userId, query) => {};
+const getContactById = async (contactId, userId) => {};
+
 const removeContact = async (contactId, userId) => {
   const result = await Contact.findOneAndRemove({
     _id: contactId,
