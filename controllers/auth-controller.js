@@ -28,162 +28,30 @@ const registrationController = async (req, res, next) => {
       message: "Email in use",
     });
   }
-
-const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email, password });
-  const payload = { id: user._id };
-  const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "23h" });
-  const result = await User.findOneAndUpdate(payload, { token });
-  res.json({
-    status: "success",
-    code: HttpCode.OK,
-    date: {
-      token,
-      user: { email: user.email, subscription: user.subscription },
-    },
-  });
-  if (!result) {
-    throw new HttpError(
-      HttpCode.BAD_REQUEST,
-      `Error from Joi or other validation library`
-    );
-  }
-};
-
-const getAll = async (req, res) => {
-  const { _id: user } = req.body;
-  const result = await User.find({ user }, "-createdAt -updatedAt").populate(
-    "user",
-    "name email"
-  );
-  res.json(result);
-  console.log(result);
-};
-
-const current = (req, res) => {
-  const { email, subscription } = req.user;
-  res.json({
-    status: "success",
-    code: HttpCode.OK,
-    date: {
-      email,
-      subscription,
-    },
-  });
-};
-
-const logout = async (req, res, next) => {
-  const { _id } = req.user;
-  await User.findOneAndUpdate(_id, { token: "" });
-  res.status(HttpCode.NO_CONTENT).json({ message: "SignOut success" });
-};
-
-const updateSubscription = async (res, req) => {
-  const { error } = User.updateSubscriptionSchema.validate(req.body);
-  if (error) {
-    throw new Error(
-      HttpCode.BAD_REQUEST,
-      "Missing subscription field or set incorrectly"
-    );
-  }
-  const { _id, email } = req.user;
-  const { subscription } = req.body;
-  const result = await User.findOneAndUpdate(
-    _id,
-    { subscription },
-    { new: true }
-  );
-  if (!result) {
-    throw Error(HttpCode.NOT_FOUND, `Contact with id=${_id} not found`);
-  }
-  res.json({ email, subscription });
-};
-
-const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
-  const { path: tmpUpload, originalname } = req.file;
-  const filename = `${_id}_${originalname}`;
-  const uploadPath = path.join(avatarsDir, filename);
-
-  await Jimp.read(tmpUpload).then((avatar) => {
-    return avatar.resize(250, 250).write(tmpUpload);
-  });
-  await fs.rename(tmpUpload, uploadPath);
-  const avatarURL = await moveAvatarToPublic(_id, tmpUpload);
-  await User.findByIdAndUpdate(_id, { avatarURL });
-
-  res.json({ avatarURL });
-};
-
-const moveAvatarToPublic = async (id, tmpAvatarPath) => {
   try {
-    const tmp = path.join(__dirname, "../tmp");
-    await fs.mkdir(tmp, { recursive: true });
+    const { verificationToken } = req.params;
+    const newUser = await User.create({ name, email, password, gender });
 
-    const avatar = await Jimp.read(tmpAvatarPath);
-    avatar.resize(250, 250);
+    const verifyEmail = {
+      to: email,
+      subject: "Verify email",
+      html: `<a href="${BASE_URL}/api/auth/verify/${verificationToken}" target="_blank">Click to verify your email</a>`,
+    };
 
-    const uniqueFilename = `${id}_${avatar.filename}`;
-    const avatarPath = path.join(avatarsDir, uniqueFilename);
+    await sendEmail(verifyEmail);
 
-    await avatar.writeAsync(avatarPath);
-
-    const avatarURL = `/avatars/${uniqueFilename}`;
-    await User.findByIdAndUpdate(id, { avatarURL });
-
-    await fs.unlink(tmpAvatarPath);
-    return avatarURL;
-  } catch (error) {
-    throw new Error("Failed moveAvatarToPublic");
+    return res.status(HttpCode.CREATED).json({
+      status: "success",
+      code: HttpCode.CREATED,
+      data: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        gender: newUser.gender,
+        avatar: newUser.avatar,
+      },
+    });
+  } catch (e) {
+    next(e);
   }
-};
-
-const getById = async (req, res) => {
-  const { id } = req.params;
-  const result = await User.findById(id);
-  if (!result) {
-    throw HttpError(404, `Contact with id=${id} not found`);
-  }
-  res.json(result);
-};
-
-const removeById = async (id) => {
-  try {
-    const removedUser = await User.findByIdAndRemove(id);
-
-    if (!removedUser) {
-      throw new Error(`User with id=${id} not found.`);
-    }
-
-    console.log(`User with id=${id} has been removed from the database.`);
-    return removedUser;
-  } catch (error) {
-    console.error("Error removing user by id:", error.message);
-    throw new Error("Failed to remove user from the database.");
-  }
-};
-
-const removeAll = async () => {
-  try {
-    await User.deleteMany({});
-    console.log("All users have been removed from the database.");
-  } catch (error) {
-    console.error("Error removing all users:", error.message);
-    throw new Error("Failed to remove all users from the database.");
-  }
-};
-
-export default {
-  register: bodyWrapper(register),
-  login: bodyWrapper(login),
-  logout: bodyWrapper(logout),
-  getById: bodyWrapper(getById),
-  getAll: bodyWrapper(getAll),
-  current: bodyWrapper(current),
-  updateSubscription: bodyWrapper(updateSubscription),
-  updateAvatar: bodyWrapper(updateAvatar),
-  moveAvatarToPublic: bodyWrapper(moveAvatarToPublic),
-  removeById: bodyWrapper(removeById),
-  removeAll: bodyWrapper(removeAll),
 };
