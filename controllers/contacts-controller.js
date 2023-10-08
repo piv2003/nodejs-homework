@@ -39,7 +39,18 @@ const avatarsDir = path.resolve("public", "avatars");
 
 const add = async (req, res) => {
   const { _id: owner } = req.user;
+  const { path: oldPath, filename } = req.file;
   console.log(req.user, owner);
+  const { error } = Contact.contactSchema.validate(req.body);
+  if (error) {
+    throw new Error(HttpCode.BAD_REQUEST, error.message);
+  }
+  const avatarName = `${owner}_${filename}`;
+  const newPath = path.join(avatarsDir, avatarName);
+  await fs.rename(oldPath, newPath);
+  const avatar = path.join("avatars", avatarName);
+  const result = await Contact.create({ ...req.body, avatar, owner });
+  res.status(HttpCode.CREATED).json(result);
 };
 
 const updateById = async (req, res) => {
