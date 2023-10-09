@@ -128,3 +128,18 @@ const loginController = async (req, res, next) => {
     },
   });
 };
+
+const currentController = async (req, res, next) => {
+  const id = req.user._id;
+  const user = await User.findById(id);
+  if (user) {
+    return res.json({
+      status: "success",
+      code: HttpCode.OK,
+      message: "Current user data",
+      data: { user },
+    });
+  }
+
+  throw new HttpError(404, "Not Found");
+};
