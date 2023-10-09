@@ -13,7 +13,9 @@ const create = async (options) => {
   return await user.save();
 };
 
-const updateToken = async (id, token) => {};
+const updateToken = async (id, token) => {
+  return await User.updateOne({ _id: id }, { token });
+};
 
 const updateTokenVerify = async (id) => {};
 
