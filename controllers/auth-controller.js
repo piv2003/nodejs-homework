@@ -92,3 +92,27 @@ const resendVerifyEmail = async (req, res) => {
     message: "Verification email sent",
   });
 };
+
+const loginController = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findByEmail(email);
+  const id = user._id;
+  const payload = { id };
+  const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "23h" });
+
+  await User.updateToken(id, { token });
+
+  res.json({
+    status: "success",
+    code: HttpCode.OK,
+    date: {
+      token,
+      user: {
+        email: user.email,
+        subscription: user.subscription,
+        id: user.id,
+        gender: user.gender,
+      },
+    },
+  });
+};
