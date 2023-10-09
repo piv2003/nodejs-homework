@@ -30,7 +30,16 @@ const listContacts = async (userId, query) => {
   delete results.docs;
   return { ...results, contacts };
 };
-const getContactById = async (contactId, userId) => {};
+const getContactById = async (contactId, userId) => {
+  const result = await Contact.findOne({
+    _id: contactId,
+    owner: userId,
+  }).populate({
+    path: "owner",
+    select: "name email gender subscription",
+  });
+  return result;
+};
 
 const removeContact = async (contactId, userId) => {
   const result = await Contact.findOneAndRemove({
