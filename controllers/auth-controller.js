@@ -162,3 +162,25 @@ const updateController = async (req, res, next) => {
     },
   });
 };
+
+const uploadAvatarController = async (req, res, next) => {
+  const id = String(req.user._id);
+  const file = req.file;
+  const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
+  const destination = path.join(AVATAR_OF_USERS, id);
+  await mkdir(destination);
+  const uploadService = new UploadService(destination);
+  const avatarUrl = await uploadService.save(file, id);
+  await User.updateAvatar(id, avatarUrl);
+  try {
+    await fs.unlink(file.path);
+  } catch (e) {
+    console.log(e.message);
+  }
+
+  return res.json({
+    status: "success",
+    code: HttpCode.OK,
+    date: { avatar: avatarUrl },
+  });
+};
