@@ -21,7 +21,9 @@ const updateTokenVerify = async (id, isVerified, verifyToken) => {
   return await User.updateOne({ _id: id }, { isVerified, verifyToken });
 };
 
-const findUserByVerifyToken = async (verifyToken) => {};
+const findUserByVerifyToken = async (verifyToken) => {
+  return await User.findOne({ verifyToken });
+};
 
 const updateSubscription = async (userId, body) => {};
 
