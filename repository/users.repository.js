@@ -17,7 +17,9 @@ const updateToken = async (id, token) => {
   return await User.updateOne({ _id: id }, { token });
 };
 
-const updateTokenVerify = async (id) => {};
+const updateTokenVerify = async (id, isVerified, verifyToken) => {
+  return await User.updateOne({ _id: id }, { isVerified, verifyToken });
+};
 
 const findUserByVerifyToken = async (verifyToken) => {};
 
