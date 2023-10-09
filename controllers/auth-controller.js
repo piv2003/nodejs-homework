@@ -194,3 +194,12 @@ const removeByIdController = async (req, res, next) => {
     date: { User },
   });
 };
+
+const removeAllController = async (req, res, next) => {
+  User.length = 0;
+  return res.json({
+    status: "success",
+    code: HttpCode.OK,
+    data: { message: "All users have been removed" },
+  });
+};
