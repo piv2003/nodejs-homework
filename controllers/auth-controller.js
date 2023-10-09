@@ -96,6 +96,18 @@ const resendVerifyEmail = async (req, res) => {
 const loginController = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findByEmail(email);
+  if (!user) {
+    throw HttpError(401, "Email or password invalid");
+  }
+
+  if (!user.verify) {
+    throw HttpError(401, "Login is not allowed because of Email is not verify");
+  }
+
+  const passwordCompare = await bcrypt.compare(password, user.password);
+  if (!passwordCompare) {
+    throw HttpError(401, "Email or password invalid");
+  }
   const id = user._id;
   const payload = { id };
   const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "23h" });
