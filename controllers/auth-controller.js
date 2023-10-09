@@ -143,3 +143,9 @@ const currentController = async (req, res, next) => {
 
   throw new HttpError(404, "Not Found");
 };
+
+const logoutController = async (req, res, next) => {
+  const id = req.user._id;
+  await User.updateToken(id, { token: "" });
+  return res.status(HttpCode.NO_CONTENT).json({ message: "Logout success" });
+};
