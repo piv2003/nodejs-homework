@@ -184,3 +184,13 @@ const uploadAvatarController = async (req, res, next) => {
     date: { avatar: avatarUrl },
   });
 };
+
+const removeByIdController = async (req, res, next) => {
+  const id = String(req.user._id);
+  User.filter((user) => user.id !== id);
+  return res.json({
+    status: "success",
+    code: HttpCode.OK,
+    date: { User },
+  });
+};
