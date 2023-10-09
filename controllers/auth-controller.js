@@ -203,3 +203,16 @@ const removeAllController = async (req, res, next) => {
     data: { message: "All users have been removed" },
   });
 };
+
+export default {
+  registrationController: bodyWrapper(registrationController),
+  verifyUserEmail: bodyWrapper(verifyUserEmail),
+  resendVerifyEmail: bodyWrapper(resendVerifyEmail),
+  loginController: bodyWrapper(loginController),
+  logoutController: bodyWrapper(logoutController),
+  currentController: bodyWrapper(currentController),
+  updateController: bodyWrapper(updateController),
+  uploadAvatarController: bodyWrapper(uploadAvatarController),
+  removeByIdController: bodyWrapper(removeByIdController),
+  removeAllController: bodyWrapper(removeAllController),
+};
