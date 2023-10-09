@@ -34,7 +34,9 @@ const updateSubscription = async (userId, body) => {
   return result;
 };
 
-const updateAvatar = async (userId, avatar) => {};
+const updateAvatar = async (userId, avatar, idUserCloud = null) => {
+  return await User.updateOne({ _id: userId }, { avatar, idUserCloud });
+};
 
 export default {
   User,
