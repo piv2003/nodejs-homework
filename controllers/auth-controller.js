@@ -149,3 +149,16 @@ const logoutController = async (req, res, next) => {
   await User.updateToken(id, { token: "" });
   return res.status(HttpCode.NO_CONTENT).json({ message: "Logout success" });
 };
+
+const updateController = async (req, res, next) => {
+  const id = req.user._id;
+  const user = await User.updateSubscription(id, req.body);
+  return res.json({
+    status: "success",
+    code: HttpCode.OK,
+    data: {
+      email: user.email,
+      subscription: user.subscription,
+    },
+  });
+};
