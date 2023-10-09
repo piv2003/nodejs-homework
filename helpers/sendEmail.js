@@ -12,7 +12,7 @@ const nodemailerConfig = {
     pass: UKR_NET_PASSWD,
   },
   logger: false,
-  debug: true,
+  debug: false,
 };
 
 const transport = nodemailer.createTransport(nodemailerConfig);
