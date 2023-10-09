@@ -25,7 +25,14 @@ const findUserByVerifyToken = async (verifyToken) => {
   return await User.findOne({ verifyToken });
 };
 
-const updateSubscription = async (userId, body) => {};
+const updateSubscription = async (userId, body) => {
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { ...body },
+    { new: true }
+  );
+  return result;
+};
 
 const updateAvatar = async (userId, avatar) => {};
 
